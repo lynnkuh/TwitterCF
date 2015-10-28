@@ -21,8 +21,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupTableView()
+        self.getAccount()
         self.getTweets()
-        self.traverseArray()
     }
 
     override func didReceiveMemoryWarning() {
@@ -35,39 +35,54 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView.dataSource = self
     }
     
-    func getTweets() {
-        
-        if let tweetJSONFileUrl = NSBundle.mainBundle().URLForResource("tweet", withExtension: "json") {
-            
-            print(tweetJSONFileUrl)
-            
-            if let tweetJSONData = NSData(contentsOfURL: tweetJSONFileUrl) {
-                
-                print(tweetJSONData)
-                
-                
-                if let tweets = TweetJSONParser.tweetFromJSONData(tweetJSONData) {
-                    
-                    print(tweets)
-                    
-                    self.tweets = tweets
-                    self.tableView.reloadData()
-                }
-                
+    func getAccount() {
+        LoginService.loginTwitter({ (error, account) -> () in
+            if let error = error {
+                print(error)
+                return
             }
-        }
-        
+            
+            if let account = account {
+                TwitterService.sharedService.account = account
+                self.authenticateUser()
+            }
+        })
     }
     
-    func traverseArray() {
-        
-        for var i = tweets.count; i <= 1; i-- {
-//           print("\(tweets[i])")
-             print("\(i)")
+    func authenticateUser(){
+        TwitterService.getAuthUser { (error, user) -> () in
+            if let error = error {
+                print(error)
+                return
+            }
+            
+            if let user = user {
+                TwitterService.sharedService.user = user
+                self.getTweets()
+            }
         }
-        
     }
-
+    
+    func getTweets() {
+        print("get tweets fired")
+        TwitterService.tweetsFromHomeTimeline { (error, tweets) -> () in
+            print(error)
+            print(tweets)
+            if let error = error {
+                print(error)
+                return
+            }
+            
+            if let tweets = tweets {
+                NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+                    self.tweets = tweets
+                    self.tableView.reloadData()
+                })
+            }
+        }
+    }
+    
+    
     
     //MARK: UITableView 
     
@@ -81,7 +96,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let tweet = self.tweets[indexPath.row]
         
         cell.textLabel?.text = tweet.text
-        cell.detailTextLabel?.text = "Tweet id is: \(tweet.id)"
+        if let user = tweet.user {
+            cell.detailTextLabel?.text = "Posted by: \(user.name)"
+        } else {
+            cell.detailTextLabel?.text = "Posted by: Sponsor."
+        }
         
         
         return cell

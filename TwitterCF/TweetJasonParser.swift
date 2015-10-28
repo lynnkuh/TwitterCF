@@ -10,7 +10,7 @@ import Foundation
 
 class TweetJSONParser {
     
-    class func tweetFromJSONData(json: NSData) -> [Tweet]? {
+    class func TweetFromJSONData(json: NSData) -> [Tweet]? {
         
         var tweets = [Tweet]()
         
@@ -21,24 +21,45 @@ class TweetJSONParser {
                 print(rootObject)
                 
                 for tweetObject in rootObject {
-                    if let user = tweetObject["user"] as? [String:AnyObject],
-                        name = user["name"] as? String ,
-                        text = tweetObject["text"] as? String,
+                    
+                    if let text = tweetObject["text"] as? String,
                         id = tweetObject["id_str"] as? String,
-                        profileImageURL = user["profile_image_url"] as? String {
-                            let tweet = Tweet(text: text, id: id, username: name, profileImageURL: profileImageURL)
+                        user = tweetObject["user"] as? [String: AnyObject] {
+                            
+                            let tweet = Tweet(text: text, id: id)
+                            
+                            if let name = user["name"] as? String,
+                                profileImageURL = user["profile_image_url"] as? String {
+                                    
+                                    tweet.user = User(name: name, profileImageURL: profileImageURL)
+                                    
+                            }
+                            
                             tweets.append(tweet)
+                            
                         }
                         
-                    }
                 }
+                
                 return tweets
+            }
+                
         } catch _ {
             return nil
         }
         
+        return nil
+        
     }
     
+    class func userFromData(user : [String : AnyObject]) -> User? {
+        if let name = user["name"] as? String,
+            profileImageURL = user["profile_image_url"] as? String {
+                return User(name: name,  profileImageURL: profileImageURL)
+        }
+        
+        return nil
+    }
     
 }
 
