@@ -33,6 +33,26 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func setupTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        self.tableView.estimatedRowHeight = 10.0
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        
+        let spinner = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        spinner.hidesWhenStopped = true
+        spinner.startAnimating()
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: spinner)
+        
+    }
+    
+    func updateFeed(sender: AnyObject) {
+        //Simulate network call
+        
+        NSOperationQueue().addOperationWithBlock { () -> Void in
+            if let spinner = sender as? UIRefreshControl {
+                spinner.endRefreshing()
+            }
+        }
+        
     }
     
     func getAccount() {
@@ -82,7 +102,27 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        print("segue fired!")
+        if segue.identifier == "showTweetDetail" {
+            
+            
+            if let twitterDetailViewController = segue.destinationViewController as? DetailViewController {
+                
+                if let selectedIndexPath = tableView.indexPathForSelectedRow {
+                    let selectedRow = selectedIndexPath.row
+
+                    let chosenTweet = tweets[selectedRow]
+                    
+                    twitterDetailViewController.tweet = chosenTweet
+                    
+                }
+            }
+        } else if segue.identifier == "MyOtherSegue" {
+            //this code would customize based on going to a different view controller
+        }
+        
+    }
     
     //MARK: UITableView 
     
@@ -95,6 +135,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         let tweet = self.tweets[indexPath.row]
         
+        cell.textLabel?.numberOfLines = 0
         cell.textLabel?.text = tweet.text
         if let user = tweet.user {
             cell.detailTextLabel?.text = "Posted by: \(user.name)"

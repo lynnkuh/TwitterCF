@@ -14,10 +14,18 @@ class Tweet {
     let id: String
     var user: User?
     
-    init(text: String, id: String, user: User? = nil){
+    let reqText: String?
+    let reqUser: User?
+    
+    var isRetweet: Bool
+    
+    init(text: String, reqText: String? = nil, id: String, user: User? = nil, reqUser: User? = nil, isRetweet: Bool = false){
         self.text = text
         self.id = id
         self.user = user
+        self.isRetweet = isRetweet
+        self.reqUser = reqUser
+        self.reqText = reqText
         
     }
     

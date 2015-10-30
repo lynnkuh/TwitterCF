@@ -26,8 +26,22 @@ class TweetJSONParser {
                         id = tweetObject["id_str"] as? String,
                         user = tweetObject["user"] as? [String: AnyObject] {
                             
-                            let tweet = Tweet(text: text, id: id)
+                     let isRetweet = self.isRetweet(tweetObject)
+                                if isRetweet.0 == true {
+                                    if let retweetObject = isRetweet.1 {
+                                        if let retweetText = retweetObject["text"] as? String,
+                                            retweetUser = retweetObject["user"] as? [String: AnyObject] {
+                                                if let retweetUser = userFromData(retweetUser),
+                                                    user = userFromData(user) {
+                                                        let tweet = Tweet(text: text, reqText: retweetText, id: id, user: user, reqUser: retweetUser, isRetweet: true)
+                                                        tweets.append(tweet)
+                                                }
+                                        }
+                                    }
+                                } else {
                             
+                            
+                                    let tweet = Tweet(text: text, id: id)
                             if let name = user["name"] as? String,
                                 profileImageURL = user["profile_image_url"] as? String {
                                     
@@ -38,7 +52,7 @@ class TweetJSONParser {
                             tweets.append(tweet)
                             
                         }
-                        
+                    }
                 }
                 
                 return tweets
@@ -50,6 +64,16 @@ class TweetJSONParser {
         
         return nil
         
+    }
+    
+    class func isRetweet(tweetObject: [String : AnyObject]) -> (Bool, [String : AnyObject]?) {
+        if let retweetObject  = tweetObject["retweeted_status"] as? [String : AnyObject] {
+            if let _ = retweetObject["text"] as? String, _ = retweetObject["user"] as? [String : AnyObject] {
+                return (true, retweetObject)
+            }
+        }
+        
+        return (false, nil)
     }
     
     class func userFromData(user : [String : AnyObject]) -> User? {
