@@ -23,7 +23,7 @@
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TweetCell" textLabel="JZY-nB-Et4" detailTextLabel="38W-CC-jrN" style="IBUITableViewCellStyleSubtitle" id="VBu-o3-B6K">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TweetCell" textLabel="JZY-nB-Et4" detailTextLabel="38W-CC-jrN" style="IBUITableViewCellStyleSubtitle" id="VBu-o3-B6K" customClass="CustomTweetTableViewCell">
                                         <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VBu-o3-B6K" id="T53-bz-kss">

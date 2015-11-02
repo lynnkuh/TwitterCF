@@ -21,6 +21,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupTableView()
+//       self.setupCustomTwitterCell()
         self.getAccount()
         self.getTweets()
     }
@@ -35,15 +36,24 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView.dataSource = self
         self.tableView.estimatedRowHeight = 10.0
         self.tableView.rowHeight = UITableViewAutomaticDimension
+        let customTwitterCellXib = UINib(nibName: "TwitterCell", bundle: NSBundle.mainBundle())
+        self.tableView.registerNib(customTwitterCellXib, forCellReuseIdentifier: "TwitterCell")
         
-        let spinner = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-        spinner.hidesWhenStopped = true
-        spinner.startAnimating()
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: spinner)
+//        let spinner = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+//        spinner.hidesWhenStopped = true
+//        spinner.startAnimating()
+
+//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: spinner)
         
     }
-    
+/*
+    func setupCustomTwitterCell() {
+        
+        let customTwitterCellXib = UINib(nibName: "TwitterCell", bundle: NSBundle.mainBundle())
+            self.tableView.registerNib(customTwitterCellXib, forCellReuseIdentifier: CustomTweetTableViewCell.identifier())
+    }
+
+*/
     func updateFeed(sender: AnyObject) {
         //Simulate network call
         
@@ -131,17 +141,20 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier("TwitterCell", forIndexPath: indexPath) as! CustomTweetTableViewCell
         
-        let tweet = self.tweets[indexPath.row]
+        cell.tweet = tweets[indexPath.row]
         
-        cell.textLabel?.numberOfLines = 0
-        cell.textLabel?.text = tweet.text
-        if let user = tweet.user {
-            cell.detailTextLabel?.text = "Posted by: \(user.name)"
-        } else {
-            cell.detailTextLabel?.text = "Posted by: Sponsor."
-        }
+ //       let tweet = self.tweets[indexPath.row]
+        
+//        cell.textLabel?.numberOfLines = 0
+//        cell.textLabel?.text = tweet.text
+//        cell.imgView?.image = tweet.user?.image
+//        if let user = tweet.user {
+//            cell.detailTextLabel?.text = "Posted by: \(user.name)"
+//        } else {
+//            cell.detailTextLabel?.text = "Posted by: Sponsor."
+//        }
         
         
         return cell

@@ -6,12 +6,13 @@
 //  Copyright © 2015 Lynn Kuhlman. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 class User {
     
     let name: String
     let profileImageURL: String
+    var image: UIImage?
     
     init(name: String, profileImageURL: String){
         self.name = name
