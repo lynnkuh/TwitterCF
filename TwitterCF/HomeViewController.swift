@@ -34,17 +34,17 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func setupTableView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        self.tableView.estimatedRowHeight = 10.0
+        self.tableView.estimatedRowHeight = 44
         self.tableView.rowHeight = UITableViewAutomaticDimension
         let customTwitterCellXib = UINib(nibName: "TwitterCell", bundle: NSBundle.mainBundle())
-        self.tableView.registerNib(customTwitterCellXib, forCellReuseIdentifier: "TwitterCell")
-        
-//        let spinner = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-//        spinner.hidesWhenStopped = true
-//        spinner.startAnimating()
+        self.tableView.registerNib(customTwitterCellXib, forCellReuseIdentifier: CustomTweetTableViewCell.identifier())
+ /*
+      let spinner = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+       spinner.hidesWhenStopped = true
+        spinner.startAnimating()
 
-//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: spinner)
-        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: spinner)
+*/
     }
 /*
     func setupCustomTwitterCell() {
@@ -141,23 +141,29 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("TwitterCell", forIndexPath: indexPath) as! CustomTweetTableViewCell
+        let cell:CustomTweetTableViewCell = tableView.dequeueReusableCellWithIdentifier(CustomTweetTableViewCell.identifier(), forIndexPath: indexPath)
+            as! CustomTweetTableViewCell
+        
         
         cell.tweet = tweets[indexPath.row]
         
- //       let tweet = self.tweets[indexPath.row]
+ //      let tweet = self.tweets[indexPath.row]
         
-//        cell.textLabel?.numberOfLines = 0
-//        cell.textLabel?.text = tweet.text
-//        cell.imgView?.image = tweet.user?.image
-//        if let user = tweet.user {
-//            cell.detailTextLabel?.text = "Posted by: \(user.name)"
-//        } else {
-//            cell.detailTextLabel?.text = "Posted by: Sponsor."
-//        }
+//       cell.textLabel?.numberOfLines = 0
+ //      cell.textLabel?.text = tweet.text
+//       cell.imgView?.image = tweet.user?.image
+ //     if let user = tweet.user {
+ //          cell.detailTextLabel?.text = "Posted by: \(user.name)"
+ //      } else {
+ //           cell.detailTextLabel?.text = "Posted by: Sponsor."
+ //       }
         
         
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        self.performSegueWithIdentifier("showTweetDetail", sender: nil)
     }
 
 

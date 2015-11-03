@@ -51,6 +51,10 @@ class CustomTweetTableViewCell: UITableViewCell {
     
     }
     
+    class func identifier() -> String {
+        return "CustomTweetTableViewCell"
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -61,5 +65,7 @@ class CustomTweetTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
+    
 
 }
